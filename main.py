@@ -9,6 +9,7 @@ AUTHOR_FONT = pygame.font.SysFont('comicsans', 10)
 
 WIDTH, HEIGHT = 1280, 720
 WIN = pygame.display.set_mode((WIDTH, HEIGHT))
+BLOCK_SIZE = 40
 
 FPS = 60
 VEL = 5
@@ -22,24 +23,37 @@ CAMERA_UNLOCK_X_LEFT_EVENT = pygame.USEREVENT + 2
 CAMERA_UNLOCK_Y_RIGHT_EVENT = pygame.USEREVENT + 3
 CAMERA_UNLOCK_Y_LEFT_EVENT = pygame.USEREVENT + 4
 
-
-START_GAME_BUTTON = pygame.Rect(0.05*WIDTH , 0.1*HEIGHT, 0.90*WIDTH, 0.2*HEIGHT)
-START_GAME_BUTTON_BORDER = pygame.Rect(0.05*WIDTH-2 , 0.1*HEIGHT-2, 0.90*WIDTH+4, 0.2*HEIGHT+4)
+NEW_GAME_BUTTON = pygame.Rect(0.30*WIDTH , 0.35*HEIGHT, 0.40*WIDTH, 0.1*HEIGHT)
+LOAD_GAME_BUTTON = pygame.Rect(0.30*WIDTH , 0.50*HEIGHT, 0.40*WIDTH, 0.1*HEIGHT)
+SETTINGS_BUTTON = pygame.Rect(0.30*WIDTH , 0.65*HEIGHT, 0.175*WIDTH, 0.1*HEIGHT)
+QUIT_BUTTON = pygame.Rect(0.525*WIDTH , 0.65*HEIGHT, 0.175*WIDTH, 0.1*HEIGHT)
 
 #pygame.display.get_surface() #getting resolution
 pygame.display.set_caption("Our Game")
 gameMap = pytmx.load_pygame(os.path.join('Assets', 'mapa.tmx'))
 
-PLAYER_SRC = pygame.image.load(os.path.join('Assets', 'player.png'))
+
 TILE_T_SRC = pygame.image.load(os.path.join('Assets', 'grass.png')).convert()
+TILE_T  = pygame.transform.scale(TILE_T_SRC, (BLOCK_SIZE,BLOCK_SIZE))
 TILE_C_SRC = pygame.image.load(os.path.join('Assets', 'water.png')).convert()
+TILE_C  = pygame.transform.scale(TILE_C_SRC, (BLOCK_SIZE,BLOCK_SIZE))
 MUSIC = pygame.mixer.Sound(os.path.join('Assets', 'music.mp3'))
 
+BUTTONS_SIZE = (100, 100)
 
-BLOCK_SIZE = 40
-TILE_T  = pygame.transform.scale(TILE_T_SRC, (BLOCK_SIZE,BLOCK_SIZE))
-TILE_C  = pygame.transform.scale(TILE_C_SRC, (BLOCK_SIZE,BLOCK_SIZE))
+SOUND_BUTTONS = pygame.image.load(os.path.join('Assets', 'sound_buttons.png'))
+MUTE_BUTTON = pygame.transform.scale(SOUND_BUTTONS.subsurface(430, 0, 375, 325), BUTTONS_SIZE)
+VOLUME_3_BUTTON = pygame.transform.scale(SOUND_BUTTONS.subsurface(10, 0, 390, 320), BUTTONS_SIZE)
+VOLUME_2_BUTTON = pygame.transform.scale(SOUND_BUTTONS.subsurface(10, 320, 390, 320), BUTTONS_SIZE)
+VOLUME_1_BUTTON = pygame.transform.scale(SOUND_BUTTONS.subsurface(10, 650, 390, 320), BUTTONS_SIZE)
+MUSIC_STOP_BUTTON = pygame.transform.scale(SOUND_BUTTONS.subsurface(684, 670, 250, 300), BUTTONS_SIZE)
+MUSIC_START_BUTTON = pygame.transform.scale(SOUND_BUTTONS.subsurface(400, 670, 300, 300), BUTTONS_SIZE)
 
+CLOSE_BUTTON_IMAGE_SRC = pygame.image.load(os.path.join('Assets', 'close_button.png'))
+CLOSE_BUTTON_IMAGE = pygame.transform.scale(CLOSE_BUTTON_IMAGE_SRC, (BUTTONS_SIZE))
+CLOSE_BUTTON = pygame.Rect(0.80*WIDTH, 0.10*HEIGHT, 100 ,100)
+
+PLAYER_SRC = pygame.image.load(os.path.join('Assets', 'player.png'))
 PLAYER_WIDTH, PLAYER_HEIGHT = 30, 60
 PLAYER_L = pygame.transform.scale(PLAYER_SRC.subsurface(65, 27, 63, 163), (PLAYER_WIDTH, PLAYER_HEIGHT))
 PLAYER_R = pygame.transform.scale(PLAYER_SRC.subsurface(292, 27, 63, 163), (PLAYER_WIDTH, PLAYER_HEIGHT))
@@ -51,10 +65,32 @@ DEFAULT_PLAYER_Y = HEIGHT/2 - PLAYER_HEIGHT/2
 
 
 def draw_menu():
-    pygame.draw.rect(WIN, BLACK, START_GAME_BUTTON_BORDER)
-    pygame.draw.rect(WIN, GREY, START_GAME_BUTTON)
-    start_game_text = DEFAULT_FONT.render("Let the game begin!", 1, WHITE)
-    WIN.blit(start_game_text, (START_GAME_BUTTON.x + START_GAME_BUTTON.width/2 - start_game_text.get_width()/2, START_GAME_BUTTON.y + START_GAME_BUTTON.height/2 - start_game_text.get_height()/2))   
+    WIN.fill(WHITE)
+    pygame.draw.rect(WIN, BLACK, NEW_GAME_BUTTON)
+    pygame.draw.rect(WIN, BLACK, LOAD_GAME_BUTTON)
+    pygame.draw.rect(WIN, BLACK, SETTINGS_BUTTON)
+    pygame.draw.rect(WIN, BLACK, QUIT_BUTTON)
+    new_game_text = DEFAULT_FONT.render("New Game!", 1, WHITE)
+    WIN.blit(new_game_text, (NEW_GAME_BUTTON.x + NEW_GAME_BUTTON.width/2 - new_game_text.get_width()/2, NEW_GAME_BUTTON.y + NEW_GAME_BUTTON.height/2 - new_game_text.get_height()/2))   
+    load_game_text = DEFAULT_FONT.render("Load Game!", 1, WHITE)
+    WIN.blit(load_game_text, (NEW_GAME_BUTTON.x + LOAD_GAME_BUTTON.width/2 - load_game_text.get_width()/2, LOAD_GAME_BUTTON.y + LOAD_GAME_BUTTON.height/2 - load_game_text.get_height()/2))   
+    settings_text = DEFAULT_FONT.render("Settings", 1, WHITE)
+    WIN.blit(settings_text, (SETTINGS_BUTTON.x + SETTINGS_BUTTON.width/2 - settings_text.get_width()/2, SETTINGS_BUTTON.y + SETTINGS_BUTTON.height/2 - settings_text.get_height()/2))    
+    quit_text = DEFAULT_FONT.render("Quit", 1, WHITE)
+    WIN.blit(quit_text, (QUIT_BUTTON.x + QUIT_BUTTON.width/2 - quit_text.get_width()/2, QUIT_BUTTON.y + QUIT_BUTTON.height/2 - quit_text.get_height()/2))      
+    #WIN.blit(MUTE_BUTTON, (
+    # , 500))
+    #WIN.blit(VOLUME_3_BUTTON, (400, 500))
+    #WIN.blit(VOLUME_2_BUTTON, (500, 500))
+    #WIN.blit(VOLUME_1_BUTTON, (600, 500))
+    #WIN.blit(MUSIC_START_BUTTON, (700, 500))
+    #WIN.blit(MUSIC_STOP_BUTTON, (800, 500))
+
+def draw_settings():
+    WIN.fill(WHITE)
+    pygame.draw.rect(WIN, WHITE, CLOSE_BUTTON)
+    WIN.blit(CLOSE_BUTTON_IMAGE, (CLOSE_BUTTON.x, CLOSE_BUTTON.y))
+    pass
 
 def drawMap(camera):
     for layer in gameMap.visible_layers:
@@ -136,6 +172,7 @@ def movement(keys_pressed, camera, player, camera_x_right_locked, camera_x_left_
 
 def main():  
     game_started = False
+    settings = False
     clock = pygame.time.Clock()
     loop = True
 
@@ -166,14 +203,23 @@ def main():
             if event.type == CAMERA_UNLOCK_Y_LEFT_EVENT:
                 camera_y_left_locked = False  
 
-        if not game_started: 
+        if not game_started and not settings: 
             draw_menu()
-            if pygame.mouse.get_pressed()[0] and START_GAME_BUTTON.collidepoint(pygame.mouse.get_pos()):
-                game_started = True
+            if pygame.mouse.get_pressed()[0]:
+                if QUIT_BUTTON.collidepoint(pygame.mouse.get_pos()):
+                    loop = False 
+                if  SETTINGS_BUTTON.collidepoint(pygame.mouse.get_pos()):
+                    settings = True            
+                if NEW_GAME_BUTTON.collidepoint(pygame.mouse.get_pos()):
+                    game_started = True
         elif game_started:
             drawMap(camera)     
             movement(keys_pressed, camera, player, camera_x_right_locked, camera_x_left_locked, camera_y_right_locked, camera_y_left_locked)
+        if settings:
+            if  pygame.mouse.get_pressed()[0] and CLOSE_BUTTON.collidepoint(pygame.mouse.get_pos()):
+                    settings = False
 
+            draw_settings()
         pygame.display.update()
     pygame.quit()
     sys.exit()
