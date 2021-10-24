@@ -1,11 +1,14 @@
 import pygame, pytmx
 import os, sys
+#import change_resolution
+
 pygame.font.init()
 pygame.mixer.init()
 
 
 DEFAULT_FONT = pygame.font.SysFont('comicsans', 30)
 AUTHOR_FONT = pygame.font.SysFont('comicsans', 10)
+SETTINGS_FONT = pygame.font.SysFont('comicsans', 30)
 
 WIDTH, HEIGHT = 1280, 720
 WIN = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -17,12 +20,15 @@ VEL = 5
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 GREY = (128, 128, 128)
+BLUE = (0, 0, 255)
+LIGHT_BLUE = (0, 145, 255)
 
 CAMERA_UNLOCK_X_RIGHT_EVENT = pygame.USEREVENT + 1
 CAMERA_UNLOCK_X_LEFT_EVENT = pygame.USEREVENT + 2
 CAMERA_UNLOCK_Y_RIGHT_EVENT = pygame.USEREVENT + 3
 CAMERA_UNLOCK_Y_LEFT_EVENT = pygame.USEREVENT + 4
 
+#menu
 NEW_GAME_BUTTON = pygame.Rect(0.30*WIDTH , 0.35*HEIGHT, 0.40*WIDTH, 0.1*HEIGHT)
 LOAD_GAME_BUTTON = pygame.Rect(0.30*WIDTH , 0.50*HEIGHT, 0.40*WIDTH, 0.1*HEIGHT)
 SETTINGS_BUTTON = pygame.Rect(0.30*WIDTH , 0.65*HEIGHT, 0.175*WIDTH, 0.1*HEIGHT)
@@ -37,22 +43,39 @@ TILE_T_SRC = pygame.image.load(os.path.join('Assets', 'grass.png')).convert()
 TILE_T  = pygame.transform.scale(TILE_T_SRC, (BLOCK_SIZE,BLOCK_SIZE))
 TILE_C_SRC = pygame.image.load(os.path.join('Assets', 'water.png')).convert()
 TILE_C  = pygame.transform.scale(TILE_C_SRC, (BLOCK_SIZE,BLOCK_SIZE))
-MUSIC = pygame.mixer.Sound(os.path.join('Assets', 'music.mp3'))
 
-BUTTONS_SIZE = (100, 100)
+
+#settings
+BUTTONS_WIDTH, BUTTONS_HEIGHT = (100, 100)
 
 SOUND_BUTTONS = pygame.image.load(os.path.join('Assets', 'sound_buttons.png'))
-MUTE_BUTTON = pygame.transform.scale(SOUND_BUTTONS.subsurface(430, 0, 375, 325), BUTTONS_SIZE)
-VOLUME_3_BUTTON = pygame.transform.scale(SOUND_BUTTONS.subsurface(10, 0, 390, 320), BUTTONS_SIZE)
-VOLUME_2_BUTTON = pygame.transform.scale(SOUND_BUTTONS.subsurface(10, 320, 390, 320), BUTTONS_SIZE)
-VOLUME_1_BUTTON = pygame.transform.scale(SOUND_BUTTONS.subsurface(10, 650, 390, 320), BUTTONS_SIZE)
-MUSIC_STOP_BUTTON = pygame.transform.scale(SOUND_BUTTONS.subsurface(684, 670, 250, 300), BUTTONS_SIZE)
-MUSIC_START_BUTTON = pygame.transform.scale(SOUND_BUTTONS.subsurface(400, 670, 300, 300), BUTTONS_SIZE)
+MUTE_BUTTON = pygame.transform.scale(SOUND_BUTTONS.subsurface(430, 0, 375, 325), (BUTTONS_WIDTH, BUTTONS_HEIGHT))
+VOLUME_3_BUTTON = pygame.transform.scale(SOUND_BUTTONS.subsurface(10, 0, 390, 320), (BUTTONS_WIDTH, BUTTONS_HEIGHT))
+VOLUME_2_BUTTON = pygame.transform.scale(SOUND_BUTTONS.subsurface(10, 320, 390, 320), (BUTTONS_WIDTH, BUTTONS_HEIGHT))
+VOLUME_1_BUTTON = pygame.transform.scale(SOUND_BUTTONS.subsurface(10, 650, 390, 320), (BUTTONS_WIDTH, BUTTONS_HEIGHT))
+MUSIC_STOP_BUTTON = pygame.transform.scale(SOUND_BUTTONS.subsurface(684, 670, 250, 300), (BUTTONS_WIDTH, BUTTONS_HEIGHT))
+MUSIC_START_BUTTON = pygame.transform.scale(SOUND_BUTTONS.subsurface(400, 670, 300, 300), (BUTTONS_WIDTH, BUTTONS_HEIGHT))
 
 CLOSE_BUTTON_IMAGE_SRC = pygame.image.load(os.path.join('Assets', 'close_button.png'))
-CLOSE_BUTTON_IMAGE = pygame.transform.scale(CLOSE_BUTTON_IMAGE_SRC, (BUTTONS_SIZE))
-CLOSE_BUTTON = pygame.Rect(0.80*WIDTH, 0.10*HEIGHT, 100 ,100)
+CLOSE_BUTTON_IMAGE = pygame.transform.scale(CLOSE_BUTTON_IMAGE_SRC, (BUTTONS_WIDTH, BUTTONS_HEIGHT))
+CLOSE_BUTTON = pygame.Rect(0.80*WIDTH, 0.10*HEIGHT, BUTTONS_WIDTH, BUTTONS_HEIGHT)
+MUSIC_VOLUME_TEXT = SETTINGS_FONT.render("Music Volume: ", 1, BLACK)
+MUSIC_VOLUME_RECT = pygame.Rect(0.60*WIDTH - BUTTONS_HEIGHT/8, 0.4*HEIGHT + MUSIC_VOLUME_TEXT.get_height()/2 - BUTTONS_HEIGHT/8, BUTTONS_WIDTH/4, BUTTONS_HEIGHT/4)
 
+SFX_VOLUME_TEXT = SETTINGS_FONT.render("SFX Volume: ", 1, BLACK)
+SFX_VOLUME_RECT = pygame.Rect(0.60*WIDTH - BUTTONS_HEIGHT/8, 0.5*HEIGHT + SFX_VOLUME_TEXT.get_height()/2 - BUTTONS_HEIGHT/8, BUTTONS_WIDTH/4, BUTTONS_HEIGHT/4)
+
+
+#sounds 
+MUSIC = pygame.mixer.Sound(os.path.join('Assets', 'music.mp3'))
+
+MUSIC_SWITCH_RECT_BORDER = pygame.Rect(0.40*WIDTH-2, 0.20*HEIGHT-2, 54, 54)
+MUSIC_SWITCH_RECT = pygame.Rect(0.40*WIDTH, 0.20*HEIGHT, 50, 50)
+SFX_SWITCH_RECT_BORDER = pygame.Rect(0.40*WIDTH-2, 0.30*HEIGHT-2, 54, 54)
+SFX_SWITCH_RECT = pygame.Rect(0.40*WIDTH, 0.30*HEIGHT, 50, 50)
+
+
+#player
 PLAYER_SRC = pygame.image.load(os.path.join('Assets', 'player.png'))
 PLAYER_WIDTH, PLAYER_HEIGHT = 30, 60
 PLAYER_L = pygame.transform.scale(PLAYER_SRC.subsurface(65, 27, 63, 163), (PLAYER_WIDTH, PLAYER_HEIGHT))
@@ -77,27 +100,44 @@ def draw_menu():
     settings_text = DEFAULT_FONT.render("Settings", 1, WHITE)
     WIN.blit(settings_text, (SETTINGS_BUTTON.x + SETTINGS_BUTTON.width/2 - settings_text.get_width()/2, SETTINGS_BUTTON.y + SETTINGS_BUTTON.height/2 - settings_text.get_height()/2))    
     quit_text = DEFAULT_FONT.render("Quit", 1, WHITE)
-    WIN.blit(quit_text, (QUIT_BUTTON.x + QUIT_BUTTON.width/2 - quit_text.get_width()/2, QUIT_BUTTON.y + QUIT_BUTTON.height/2 - quit_text.get_height()/2))      
-    #WIN.blit(MUTE_BUTTON, (
-    # , 500))
+    WIN.blit(quit_text, (QUIT_BUTTON.x + QUIT_BUTTON.width/2 - quit_text.get_width()/2, QUIT_BUTTON.y + QUIT_BUTTON.height/2 - quit_text.get_height()/2))        
+
+def draw_settings(MUSIC_BOOL, SFX_BOOL):
+    WIN.fill(WHITE)
+    pygame.draw.rect(WIN, WHITE, CLOSE_BUTTON)
+    WIN.blit(CLOSE_BUTTON_IMAGE, (CLOSE_BUTTON.x, CLOSE_BUTTON.y))
+    music_text = SETTINGS_FONT.render("Music: ", 1, BLACK)
+    WIN.blit(music_text, (0.3*WIDTH, 0.2*HEIGHT))
+    pygame.draw.rect(WIN, BLACK, MUSIC_SWITCH_RECT_BORDER)
+    if not MUSIC_BOOL:
+        pygame.draw.rect(WIN, WHITE, MUSIC_SWITCH_RECT)
+    sfx_text = SETTINGS_FONT.render("SFX: ", 1, BLACK)
+    WIN.blit(sfx_text, (0.3*WIDTH, 0.3*HEIGHT))
+    pygame.draw.rect(WIN, BLACK, SFX_SWITCH_RECT_BORDER)
+    if not SFX_BOOL:
+        pygame.draw.rect(WIN, WHITE, SFX_SWITCH_RECT)
+    
+    WIN.blit(MUSIC_VOLUME_TEXT, (0.3*WIDTH, 0.4*HEIGHT))
+    pygame.draw.line(WIN, LIGHT_BLUE, (0.5*WIDTH, 0.4*HEIGHT + MUSIC_VOLUME_TEXT.get_height()/2), (0.70*WIDTH, 0.4*HEIGHT + MUSIC_VOLUME_TEXT.get_height()/2), width = 5)
+    pygame.draw.line(WIN, BLUE, (0.5*WIDTH, 0.4*HEIGHT + MUSIC_VOLUME_TEXT.get_height()/2), (MUSIC_VOLUME_RECT.x + MUSIC_VOLUME_RECT.width/2, 0.4*HEIGHT + MUSIC_VOLUME_TEXT.get_height()/2), width = 5)
+    pygame.draw.rect(WIN, BLUE, MUSIC_VOLUME_RECT)
+
+    WIN.blit(SFX_VOLUME_TEXT, (0.3*WIDTH, 0.5*HEIGHT))
+    pygame.draw.line(WIN, LIGHT_BLUE, (0.5*WIDTH, 0.5*HEIGHT + SFX_VOLUME_TEXT.get_height()/2), (0.70*WIDTH, 0.5*HEIGHT + SFX_VOLUME_TEXT.get_height()/2), width = 5)
+    pygame.draw.line(WIN, BLUE, (0.5*WIDTH, 0.5*HEIGHT + SFX_VOLUME_TEXT.get_height()/2), (SFX_VOLUME_RECT.x + SFX_VOLUME_RECT.width/2, 0.5*HEIGHT + SFX_VOLUME_TEXT.get_height()/2), width = 5)
+    pygame.draw.rect(WIN, BLUE, SFX_VOLUME_RECT)
+    
     #WIN.blit(VOLUME_3_BUTTON, (400, 500))
     #WIN.blit(VOLUME_2_BUTTON, (500, 500))
     #WIN.blit(VOLUME_1_BUTTON, (600, 500))
     #WIN.blit(MUSIC_START_BUTTON, (700, 500))
     #WIN.blit(MUSIC_STOP_BUTTON, (800, 500))
 
-def draw_settings():
-    WIN.fill(WHITE)
-    pygame.draw.rect(WIN, WHITE, CLOSE_BUTTON)
-    WIN.blit(CLOSE_BUTTON_IMAGE, (CLOSE_BUTTON.x, CLOSE_BUTTON.y))
-    pass
-
 def drawMap(camera):
     for layer in gameMap.visible_layers:
             for x, y, gid, in layer:
                 tile = gameMap.get_tile_image_by_gid(gid)
                 WIN.blit(tile, (x * gameMap.tilewidth-camera.x, y * gameMap.tileheight-camera.y))
-
 
             index_x = camera.x
             index_y = camera.y
@@ -110,8 +150,6 @@ def drawMap(camera):
                 pygame.event.post(pygame.event.Event(CAMERA_UNLOCK_Y_LEFT_EVENT))
             elif index_y >= gameMap.tileheight*gameMap.height-HEIGHT-PLAYER_HEIGHT:
                 pygame.event.post(pygame.event.Event(CAMERA_UNLOCK_Y_RIGHT_EVENT))
-
-
 
 def handlePlayer(player, direction):
     if direction == 'L':
@@ -169,17 +207,35 @@ def movement(keys_pressed, camera, player, camera_x_right_locked, camera_x_left_
     elif not camera_y_locked: 
         player.y += y    
     
+def move_volume(VOLUME_RECT, SOUND):
+    x = pygame.mouse.get_pos()[0]
+    if  x < 0.50*WIDTH:
+        VOLUME_RECT.x = 0.50*WIDTH - VOLUME_RECT.width/2 
+    elif x > 0.70*WIDTH:  
+        VOLUME_RECT.x = 0.70*WIDTH - VOLUME_RECT.width/2           
+    else:
+        VOLUME_RECT.x = x
+    volume = (x/WIDTH-0.5)/0.2
+    if volume < 0:
+        volume = 0
+    elif volume > 1:                        
+        volume = 1
+    SOUND.set_volume(volume) 
 
-def main():  
+def main(): 
     game_started = False
     settings = False
+    MUSIC_BOOL = True
+    SFX_BOOL = True 
     clock = pygame.time.Clock()
     loop = True
-
+    music_volume_hold = False
+    sfx_volume_hold = False
     player = pygame.Rect(DEFAULT_PLAYER_X, DEFAULT_PLAYER_Y, PLAYER_WIDTH, PLAYER_HEIGHT)
-    camera = pygame.Rect(0, 0, WIDTH, HEIGHT)    
-    
-    #MUSIC.play()
+    camera = pygame.Rect(0, 0, WIDTH, HEIGHT)
+    if MUSIC_BOOL:
+        #MUSIC.play()
+        pass
     #MUSIC.set_volume(0.1)
     
     while loop:
@@ -188,10 +244,13 @@ def main():
 
         camera_x_right_locked = True 
         camera_x_left_locked = True
-        camera_y_right_locked = True 
-        camera_y_left_locked = True
-
+        camera_y_right_locked = True
+        camera_y_left_locked = True 
+        
         for event in pygame.event.get():
+            if  pygame.mouse.get_pressed()[0] and LOAD_GAME_BUTTON.collidepoint(pygame.mouse.get_pos()):
+                    #change_resolution.change_resolution(600, 600)
+                    pass
             if event.type == pygame.QUIT:
                 loop = False
             if event.type == CAMERA_UNLOCK_X_RIGHT_EVENT:
@@ -201,8 +260,43 @@ def main():
             if event.type == CAMERA_UNLOCK_Y_RIGHT_EVENT:
                 camera_y_right_locked = False   
             if event.type == CAMERA_UNLOCK_Y_LEFT_EVENT:
-                camera_y_left_locked = False  
-
+                camera_y_left_locked = False
+            if settings:
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if  pygame.mouse.get_pressed()[0] and MUSIC_SWITCH_RECT.collidepoint(pygame.mouse.get_pos()):
+                        if MUSIC_BOOL: 
+                            MUSIC_BOOL = False
+                            MUSIC.stop()
+                        else:
+                            MUSIC_BOOL = True 
+                            MUSIC.play()
+                    if  pygame.mouse.get_pressed()[0] and SFX_SWITCH_RECT.collidepoint(pygame.mouse.get_pos()):
+                        if SFX_BOOL:
+                            SFX_BOOL = False
+                        else:
+                            SFX_BOOL = True
+            
+                if  pygame.mouse.get_pressed()[0] and MUSIC_VOLUME_RECT.collidepoint(pygame.mouse.get_pos()) and event.type == pygame.MOUSEBUTTONDOWN:
+                    music_volume_hold = True
+                if music_volume_hold and event.type == pygame.MOUSEBUTTONUP: 
+                    move_volume(MUSIC_VOLUME_RECT, MUSIC)
+                    music_volume_hold = False   
+                
+                if  pygame.mouse.get_pressed()[0] and SFX_VOLUME_RECT.collidepoint(pygame.mouse.get_pos()) and event.type == pygame.MOUSEBUTTONDOWN:
+                    sfx_volume_hold = True
+                if sfx_volume_hold and event.type == pygame.MOUSEBUTTONUP: 
+                    move_volume(SFX_VOLUME_RECT, MUSIC)
+                    sfx_volume_hold = False
+                                   
+                
+            """if event.type == pygame.MOUSEBUTTONDOWN:
+                if  pygame.mouse.get_pressed()[0] and SFX_SWITCH_RECT.collidepoint(pygame.mouse.get_pos()):
+                    if SFX_BOOL:
+                        SFX_BOOL = False
+                        SFX.stop()                        
+                    else:
+                        SFX_BOOL = True
+                        SFX.play()"""
         if not game_started and not settings: 
             draw_menu()
             if pygame.mouse.get_pressed()[0]:
@@ -218,8 +312,8 @@ def main():
         if settings:
             if  pygame.mouse.get_pressed()[0] and CLOSE_BUTTON.collidepoint(pygame.mouse.get_pos()):
                     settings = False
-
-            draw_settings()
+            
+            draw_settings(MUSIC_BOOL, SFX_BOOL)
         pygame.display.update()
     pygame.quit()
     sys.exit()
