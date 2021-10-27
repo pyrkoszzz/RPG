@@ -261,7 +261,6 @@ def main():
         elif game_started:
             drawMap()     
             player.movement(camera_x_left_locked, camera_x_right_locked, camera_y_left_locked, camera_y_right_locked)
-            print(camera.x)
         if settings:
             if  pygame.mouse.get_pressed()[0] and CLOSE_BUTTON.collidepoint(pygame.mouse.get_pos()):
                     settings = False

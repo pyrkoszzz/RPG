@@ -48,7 +48,6 @@ class Player:
             x += 8
             self.direction = 'L'
         self.draw()
-        #print(self.x, camera_x_right_locked)
         if self.x + PLAYER_WIDTH/2 == WIDTH/2:
             camera_x_locked = True
 
