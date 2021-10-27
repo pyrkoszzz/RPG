@@ -136,8 +136,7 @@ def draw_settings(MUSIC_BOOL, SFX_BOOL):
     #WIN.blit(MUSIC_START_BUTTON, (700, 500))
     #WIN.blit(MUSIC_STOP_BUTTON, (800, 500))
 
-def drawMap():
-    from player import camera
+def drawMap(camera):
     for layer in gameMap.visible_layers:
             for x, y, gid, in layer:
                 tile = gameMap.get_tile_image_by_gid(gid)
@@ -174,7 +173,7 @@ def move_volume(VOLUME_RECT, SOUND):
 
 
 def main():
-    from player import camera
+    from camera import Camera
     from player import Player
     game_started = False
     settings = False
@@ -190,15 +189,15 @@ def main():
         pass
     #MUSIC.set_volume(0.1)
     player = Player() 
-    
+    camera = Camera()
     while loop:
         clock.tick(FPS)
         keys_pressed = pygame.key.get_pressed()
         
-        camera_x_right_locked = True 
-        camera_x_left_locked = True
-        camera_y_right_locked = True
-        camera_y_left_locked = True 
+        camera.camera_x_right_locked = True 
+        camera.camera_x_left_locked = True
+        camera.camera_y_right_locked = True
+        camera.camera_y_left_locked = True 
         
         for event in pygame.event.get():
             if  pygame.mouse.get_pressed()[0] and LOAD_GAME_BUTTON.collidepoint(pygame.mouse.get_pos()):
@@ -206,13 +205,13 @@ def main():
             if event.type == pygame.QUIT:
                 loop = False
             if event.type == CAMERA_UNLOCK_X_RIGHT_EVENT:
-                camera_x_right_locked = False  
+                camera.camera_x_right_locked = False  
             if event.type == CAMERA_UNLOCK_X_LEFT_EVENT:
-                camera_x_left_locked = False    
+                camera.camera_x_left_locked = False    
             if event.type == CAMERA_UNLOCK_Y_RIGHT_EVENT:
-                camera_y_right_locked = False   
+                camera.camera_y_right_locked = False   
             if event.type == CAMERA_UNLOCK_Y_LEFT_EVENT:
-                camera_y_left_locked = False
+                camera.camera_y_left_locked = False
             if settings:
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if  pygame.mouse.get_pressed()[0] and MUSIC_SWITCH_RECT.collidepoint(pygame.mouse.get_pos()):
@@ -259,8 +258,8 @@ def main():
                 if NEW_GAME_BUTTON.collidepoint(pygame.mouse.get_pos()):
                     game_started = True
         elif game_started:
-            drawMap()     
-            player.movement(camera_x_left_locked, camera_x_right_locked, camera_y_left_locked, camera_y_right_locked)
+            drawMap(camera)     
+            player.movement(camera)
         if settings:
             if  pygame.mouse.get_pressed()[0] and CLOSE_BUTTON.collidepoint(pygame.mouse.get_pos()):
                     settings = False

@@ -4,7 +4,7 @@ import os
 from main import WIN, HEIGHT, WIDTH, PLAYER_WIDTH, PLAYER_HEIGHT, DEFAULT_PLAYER_X, DEFAULT_PLAYER_Y
 
 
-camera = pygame.Rect(0, 0, WIDTH, HEIGHT)
+#camera = pygame.Rect(0, 0, WIDTH, HEIGHT)
 PLAYER_SRC = pygame.image.load(os.path.join('Assets', 'player.png'))
 
 PLAYER_L = pygame.transform.scale(PLAYER_SRC.subsurface(65, 27, 63, 163), (PLAYER_WIDTH, PLAYER_HEIGHT))
@@ -29,10 +29,14 @@ class Player:
             self.win.blit(PLAYER_D, (self.x, self.y))  
 
 
-    def movement(self, camera_x_left_locked, camera_x_right_locked, camera_y_left_locked, camera_y_right_locked):
-
+    def movement(self, camera):
+        from camera import Camera
         direction = '' 
         x, y = 0, 0
+        camera_x_left_locked = camera.camera_x_left_locked
+        camera_x_right_locked = camera.camera_x_right_locked
+        camera_y_left_locked = camera.camera_y_left_locked
+        camera_y_right_locked = camera.camera_y_right_locked
 
         keys_pressed = pygame.key.get_pressed()
         if keys_pressed[pygame.K_w]:
@@ -48,9 +52,9 @@ class Player:
             x += 8
             self.direction = 'L'
         self.draw()
+
         if self.x + PLAYER_WIDTH/2 == WIDTH/2:
             camera_x_locked = True
-
         else: 
             camera_x_locked = False
         if   self.y + PLAYER_HEIGHT/2 == HEIGHT/2:
@@ -61,6 +65,7 @@ class Player:
 
         if camera_x_locked: 
             if x<0 and not camera_x_left_locked:
+                print(x, camera_x_left_locked)
                 self.x += x
             elif x>0 and not camera_x_right_locked:
                 self.x += x
@@ -73,7 +78,7 @@ class Player:
                 self.y += y
             elif y>0 and not camera_y_right_locked:
                 self.y += y
-            else:
+            else:                
                 camera.y += y
         elif not camera_y_locked: 
             self.y += y  
