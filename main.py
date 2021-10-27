@@ -137,6 +137,7 @@ def draw_settings(MUSIC_BOOL, SFX_BOOL):
     #WIN.blit(MUSIC_STOP_BUTTON, (800, 500))
 
 def drawMap():
+    from player import camera
     for layer in gameMap.visible_layers:
             for x, y, gid, in layer:
                 tile = gameMap.get_tile_image_by_gid(gid)

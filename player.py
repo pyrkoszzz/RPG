@@ -29,7 +29,7 @@ class Player:
             self.win.blit(PLAYER_D, (self.x, self.y))  
 
 
-    def movement(self, camera, camera_x_left_locked, camera_x_right_locked, camera_y_left_locked, camera_y_right_locked):
+    def movement(self, camera_x_left_locked, camera_x_right_locked, camera_y_left_locked, camera_y_right_locked):
 
         direction = '' 
         x, y = 0, 0
