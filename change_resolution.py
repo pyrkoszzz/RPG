@@ -1,14 +1,13 @@
 import pygame
 import main
-from main import HEIGHT1
 
 
 def change():
-    global HEIGHT1
+    global main.HEIGHT1
 
     
-    HEIGHT = 100
-    print(HEIGHT1)
+    main.HEIGHT1 = 100
+    print(main.HEIGHT1)
 
 
 """       
