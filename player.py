@@ -2,9 +2,7 @@ from sys import winver
 import pygame
 import os
 from main import WIN, HEIGHT, WIDTH, PLAYER_WIDTH, PLAYER_HEIGHT, DEFAULT_PLAYER_X, DEFAULT_PLAYER_Y
-
-
-#camera = pygame.Rect(0, 0, WIDTH, HEIGHT)
+x, y = 0, 0
 PLAYER_SRC = pygame.image.load(os.path.join('Assets', 'player.png'))
 
 PLAYER_L = pygame.transform.scale(PLAYER_SRC.subsurface(65, 27, 63, 163), (PLAYER_WIDTH, PLAYER_HEIGHT))
@@ -14,24 +12,24 @@ PLAYER_D = pygame.transform.scale(PLAYER_SRC.subsurface(161, 27, 90, 163), (3/2*
 
 class Player:    
     def __init__(self):
-        self.win = WIN
         self.x = DEFAULT_PLAYER_X
         self.y = DEFAULT_PLAYER_Y
         self.direction = 'S'
     def draw(self):
         if self.direction == 'L':
-            self.win.blit(PLAYER_L, (self.x, self.y))
+            WIN.blit(PLAYER_L, (self.x, self.y))
         elif self.direction == 'R':
-            self.win.blit(PLAYER_R, (self.x, self.y))
+            WIN.blit(PLAYER_R, (self.x, self.y))
         elif self.direction == 'U':
-            self.win.blit(PLAYER_U, (self.x, self.y))
+            WIN.blit(PLAYER_U, (self.x, self.y))
         else:
-            self.win.blit(PLAYER_D, (self.x, self.y))  
+            WIN.blit(PLAYER_D, (self.x, self.y))  
 
 
     def movement(self, camera):
         from camera import Camera
         direction = '' 
+
         x, y = 0, 0
         camera_x_left_locked = camera.camera_x_left_locked
         camera_x_right_locked = camera.camera_x_right_locked
@@ -72,6 +70,7 @@ class Player:
                 self.x += x
             else:
                 camera.x += x
+                camera.delta_x = x
         elif not camera_x_locked: 
             self.x += x
         if camera_y_locked: 
@@ -81,6 +80,8 @@ class Player:
                 self.y += y
             else:                
                 camera.y += y
+                camera.delta_y = y
+
         elif not camera_y_locked: 
             self.y += y  
         

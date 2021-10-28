@@ -17,6 +17,7 @@ BLOCK_SIZE = 40
 
 FPS = 60
 VEL = 5
+x, y = 0, 0
 
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
@@ -155,6 +156,7 @@ def move_volume(VOLUME_RECT, SOUND):
 def main():
     from camera import Camera
     from player import Player
+    from enemy import Monster
     game_started = False
     settings = False
     MUSIC_BOOL = True
@@ -169,6 +171,7 @@ def main():
     MUSIC.set_volume(0.1)
     player = Player() 
     camera = Camera()
+    monster = Monster()
     while loop:
         clock.tick(FPS)
         keys_pressed = pygame.key.get_pressed()
@@ -226,9 +229,7 @@ def main():
                         SFX.stop()                        
                     else:
                         SFX_BOOL = True
-                        SFX.play()"""
-
-              
+                        SFX.play()"""              
 
         if not game_started and not settings: 
             draw_menu()
@@ -246,7 +247,10 @@ def main():
         if game_started:
             drawMap(camera)     
             player.movement(camera)
-        
+            monster.move(camera)
+            monster.draw()
+            camera.check()
+            
         pygame.display.update()
     pygame.quit()
     sys.exit()
