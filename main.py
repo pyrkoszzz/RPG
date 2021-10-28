@@ -130,12 +130,6 @@ def draw_settings(MUSIC_BOOL, SFX_BOOL):
     pygame.draw.line(WIN, BLUE, (0.5*WIDTH, 0.5*HEIGHT + SFX_VOLUME_TEXT.get_height()/2), (SFX_VOLUME_RECT.x + SFX_VOLUME_RECT.width/2, 0.5*HEIGHT + SFX_VOLUME_TEXT.get_height()/2), width = 5)
     pygame.draw.rect(WIN, BLUE, SFX_VOLUME_RECT)
     
-    #WIN.blit(VOLUME_3_BUTTON, (400, 500))
-    #WIN.blit(VOLUME_2_BUTTON, (500, 500))
-    #WIN.blit(VOLUME_1_BUTTON, (600, 500))
-    #WIN.blit(MUSIC_START_BUTTON, (700, 500))
-    #WIN.blit(MUSIC_STOP_BUTTON, (800, 500))
-
 def drawMap(camera):
     for layer in gameMap.visible_layers:
             for x, y, gid, in layer:
@@ -171,7 +165,6 @@ def move_volume(VOLUME_RECT, SOUND):
     SOUND.set_volume(volume) 
 
 
-
 def main():
     from camera import Camera
     from player import Player
@@ -183,11 +176,10 @@ def main():
     loop = True
     music_volume_hold = False
     sfx_volume_hold = False
-    #player = pygame.Rect(DEFAULT_PLAYER_X, DEFAULT_PLAYER_Y, PLAYER_WIDTH, PLAYER_HEIGHT)
     if MUSIC_BOOL:
         #MUSIC.play()
         pass
-    #MUSIC.set_volume(0.1)
+    MUSIC.set_volume(0.1)
     player = Player() 
     camera = Camera()
     while loop:
@@ -248,6 +240,9 @@ def main():
                     else:
                         SFX_BOOL = True
                         SFX.play()"""
+
+              
+
         if not game_started and not settings: 
             draw_menu()
             if pygame.mouse.get_pressed()[0]:
@@ -257,14 +252,14 @@ def main():
                     settings = True            
                 if NEW_GAME_BUTTON.collidepoint(pygame.mouse.get_pos()):
                     game_started = True
-        elif game_started:
-            drawMap(camera)     
-            player.movement(camera)
         if settings:
             if  pygame.mouse.get_pressed()[0] and CLOSE_BUTTON.collidepoint(pygame.mouse.get_pos()):
                     settings = False
-            draw_settings(MUSIC_BOOL, SFX_BOOL)
-            
+            draw_settings(MUSIC_BOOL, SFX_BOOL)   
+        if game_started:
+            drawMap(camera)     
+            player.movement(camera)
+        
         pygame.display.update()
     pygame.quit()
     sys.exit()

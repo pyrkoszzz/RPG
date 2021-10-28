@@ -38,6 +38,8 @@ class Player:
         camera_y_left_locked = camera.camera_y_left_locked
         camera_y_right_locked = camera.camera_y_right_locked
 
+        
+
         keys_pressed = pygame.key.get_pressed()
         if keys_pressed[pygame.K_w]:
             y -= 8
@@ -65,7 +67,6 @@ class Player:
 
         if camera_x_locked: 
             if x<0 and not camera_x_left_locked:
-                print(x, camera_x_left_locked)
                 self.x += x
             elif x>0 and not camera_x_right_locked:
                 self.x += x
