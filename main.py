@@ -51,14 +51,6 @@ TILE_C  = pygame.transform.scale(TILE_C_SRC, (BLOCK_SIZE,BLOCK_SIZE))
 #settings
 BUTTONS_WIDTH, BUTTONS_HEIGHT = (100, 100)
 
-SOUND_BUTTONS = pygame.image.load(os.path.join('Assets', 'sound_buttons.png'))
-MUTE_BUTTON = pygame.transform.scale(SOUND_BUTTONS.subsurface(430, 0, 375, 325), (BUTTONS_WIDTH, BUTTONS_HEIGHT))
-VOLUME_3_BUTTON = pygame.transform.scale(SOUND_BUTTONS.subsurface(10, 0, 390, 320), (BUTTONS_WIDTH, BUTTONS_HEIGHT))
-VOLUME_2_BUTTON = pygame.transform.scale(SOUND_BUTTONS.subsurface(10, 320, 390, 320), (BUTTONS_WIDTH, BUTTONS_HEIGHT))
-VOLUME_1_BUTTON = pygame.transform.scale(SOUND_BUTTONS.subsurface(10, 650, 390, 320), (BUTTONS_WIDTH, BUTTONS_HEIGHT))
-MUSIC_STOP_BUTTON = pygame.transform.scale(SOUND_BUTTONS.subsurface(684, 670, 250, 300), (BUTTONS_WIDTH, BUTTONS_HEIGHT))
-MUSIC_START_BUTTON = pygame.transform.scale(SOUND_BUTTONS.subsurface(400, 670, 300, 300), (BUTTONS_WIDTH, BUTTONS_HEIGHT))
-
 CLOSE_BUTTON_IMAGE_SRC = pygame.image.load(os.path.join('Assets', 'close_button.png'))
 CLOSE_BUTTON_IMAGE = pygame.transform.scale(CLOSE_BUTTON_IMAGE_SRC, (BUTTONS_WIDTH, BUTTONS_HEIGHT))
 CLOSE_BUTTON = pygame.Rect(0.80*WIDTH, 0.10*HEIGHT, BUTTONS_WIDTH, BUTTONS_HEIGHT)
@@ -79,12 +71,7 @@ SFX_SWITCH_RECT = pygame.Rect(0.40*WIDTH, 0.30*HEIGHT, 50, 50)
 
 
 #player
-PLAYER_SRC = pygame.image.load(os.path.join('Assets', 'player.png'))
 PLAYER_WIDTH, PLAYER_HEIGHT = 30, 60
-PLAYER_L = pygame.transform.scale(PLAYER_SRC.subsurface(65, 27, 63, 163), (PLAYER_WIDTH, PLAYER_HEIGHT))
-PLAYER_R = pygame.transform.scale(PLAYER_SRC.subsurface(292, 27, 63, 163), (PLAYER_WIDTH, PLAYER_HEIGHT))
-PLAYER_U = pygame.transform.scale(PLAYER_SRC.subsurface(391, 27, 90, 163), (3/2*PLAYER_WIDTH, PLAYER_HEIGHT))
-PLAYER_D = pygame.transform.scale(PLAYER_SRC.subsurface(161, 27, 90, 163), (3/2*PLAYER_WIDTH, PLAYER_HEIGHT))
 
 DEFAULT_PLAYER_X = WIDTH/2 - PLAYER_WIDTH/2
 DEFAULT_PLAYER_Y = HEIGHT/2 - PLAYER_HEIGHT/2
